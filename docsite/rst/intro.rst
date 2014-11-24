@@ -1,7 +1,7 @@
-Introduction
+イントロダクション
 ============
 
-Before we dive into the really fun parts -- playbooks, configuration management, deployment, and orchestration, we'll learn how to get Ansible installed and some basic concepts.  We'll go over how to execute ad-hoc commands in parallel across your nodes using /usr/bin/ansible.  We'll also see what sort of modules are available in Ansible's core (though you can also write your own, which we'll also show later).
+playbooks、構成管理、デプロイメントやオーケストレーションといった面白い部分に入る前に、Ansible を入手してインストールするための基本的な事を学びます。また、/usr/bin/ansible を使ってどのようにアドホックコマンドを対象ノードに対して並行に実行するかをみて行きます。また、いくつかのコアなモジュール（モジュールの作成も可能ですが、それは後ほど）もあわせてみて行きます。
 
 .. toctree::
    :maxdepth: 1
@@ -14,4 +14,3 @@ Before we dive into the really fun parts -- playbooks, configuration management,
    intro_adhoc
    intro_configuration
    intro_windows
-
