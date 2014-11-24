@@ -1,109 +1,86 @@
-Installation
+インストール
 ============
 
-.. contents:: Topics
+.. contents:: トピックス
 
 .. _getting_ansible:
 
-Getting Ansible
+Ansible の入手
 ```````````````
 
-You may also wish to follow the `Github project <https://github.com/ansible/ansible>`_ if
-you have a github account.  This is also where we keep the issue tracker for sharing
-bugs and feature ideas.
+github アカウントを持っている場合、`Github プロジェクト <https://github.com/ansible/ansible>`_ から Ansible を入手することが出来ます。github はバグや機能のアイデアを共有するための issue トラッカを管理する場所です。
 
 .. _what_will_be_installed:
 
-Basics / What Will Be Installed
+基本 / 何をインストールするか
 ```````````````````````````````
 
-Ansible by default manages machines over the SSH protocol.
+Ansible はデフォルトで SSH プロトコルでマシンを管理します。
 
-Once Ansible is installed, it will not add a database, and there will be no daemons to start or keep running.  You only need to install it on one machine (which could easily be a laptop) and it can manage an entire fleet of remote machines from that central point.  When Ansible manages remote machines, it does not leave software installed or running on them, so there's no real question about how to upgrade Ansible when moving to a new version.
+一度 Ansible をインストールすれば、データベースを追加したり、デーモンを起動して実行させる必要はありません。マシン（ラップトップだと手軽）にインストールし、全体のリモートマシンを管理する事ができます。　Ansible でリモートマシンを管理する際に、リモートマシンにソフトウェアがインストールされているか、それが実行中であるかを気にする必要がないため、新しいバージョンに移行した時に、どうやって Ansible をアップグレードすればよいかという事は問題にはなりません。
 
 .. _what_version:
 
-What Version To Pick?
+どのバージョンを選べばよいか?
 `````````````````````
 
-Because it runs so easily from source and does not require any installation of software on remote
-machines, many users will actually track the development version.  
+ソースからの実行はとても簡単なので、リモートマシンでインストールする必要はありません。実際、多くのユーザは開発バージョンを追っています。
 
-Ansible's release cycles are usually about two months long.  Due to this
-short release cycle, minor bugs will generally be fixed in the next release versus maintaining 
-backports on the stable branch.  Major bugs will still have maintenance releases when needed, though
-these are infrequent.
+Ansible のリリース周期は通常2ヶ月です。この短いリリース周期のため、マイナーバグは安定版ブランチでのバックポートと比較して、一般に次のリリースで修正されます。
 
-If you are wishing to run the latest released version of Ansible and you are running Red Hat Enterprise Linux (TM), CentOS, Fedora, Debian, or Ubuntu, we recommend using the OS package manager.
+メジャーバグは、まだメンテナンスされている事もありますが、もっともそれはまれです。
 
-For other installation options, we recommend installing via "pip", which is the Python package manager, though other options are also available.
+Red Hat Enterprise Linux (TM), CentOS, Fedora, Debian, あるいは Ubuntuを使っていて、最新のリリースバージョンを取得するには OS のパッケージマネージャを利用できます。
 
-If you wish to track the development release to use and test the latest features, we will share
-information about running from source.  It's not necessary to install the program to run from source.
+他には Python パッケージマネージャの "pip" を利用できます。
+
+最新の機能を使ったりテストするために開発バージョンを使用したいのであれば、実行のために情報をソースから取得できます。ソースから実行するためのプログラムをインストールする必要はありません。
 
 .. _control_machine_requirements:
 
-Control Machine Requirements
+管理マシンの要件
 ````````````````````````````
 
-Currently Ansible can be run from any machine with Python 2.6 installed (Windows isn't supported for the control machine).
+今のところ Ansible は Python 2.6 がインストールされている管理マシンから実行することが出来ます。(管理マシンとして Windows のサポートはされていません)
 
-This includes Red Hat, Debian, CentOS, OS X, any of the BSDs, and so on.
-  
+これは Red Hat, Debian, CentOS, OS X, BSD ではインストールされていることでしょう。
+
 .. _managed_node_requirements:
 
-Managed Node Requirements
+対象ノードの要件
 `````````````````````````
+管理対象のノードには Python 2.4 またはそれ以降のバージョンがインストールされている必要があります。ただし、Python 2.5 以前であれば次のパッケージがインストールされている必要があります。
 
-On the managed nodes, you only need Python 2.4 or later, but if you are running less than Python 2.5 on the remotes, you will also need:
-
-* ``python-simplejson`` 
-
-.. note::
-
-   Ansible's "raw" module (for executing commands in a quick and dirty
-   way) and the script module don't even need that.  So technically, you can use
-   Ansible to install python-simplejson using the raw module, which
-   then allows you to use everything else.  (That's jumping ahead
-   though.)
+* ``python-simplejson``
 
 .. note::
 
-   If you have SELinux enabled on remote nodes, you will also want to install
-   libselinux-python on them before using any copy/file/template related functions in
-   Ansible. You can of course still use the yum module in Ansible to install this package on
-   remote systems that do not have it.
+   "raw" モジュール（手軽で荒い方法でコマンドを実行するためのモジュール）と script モジュールはこれを必要としません。Ansible の raw モジュールを使って python-simplejson をインストールする事もできます。
 
 .. note::
 
-   Python 3 is a slightly different language than Python 2 and most Python programs (including
-   Ansible) are not switching over yet.  However, some Linux distributions (Gentoo, Arch) may not have a 
-   Python 2.X interpreter installed by default.  On those systems, you should install one, and set
-   the 'ansible_python_interpreter' variable in inventory (see :doc:`intro_inventory`) to point at your 2.X Python.  Distributions
-   like Red Hat Enterprise Linux, CentOS, Fedora, and Ubuntu all have a 2.X interpreter installed
-   by default and this does not apply to those distributions.  This is also true of nearly all
-   Unix systems.  If you need to bootstrap these remote systems by installing Python 2.X, 
-   using the 'raw' module will be able to do it remotely.
+   リモートノードで SELinux を有効にしている場合、copy/file/template モジュールを使用する前に libselinux-python をインストールしておく必要があります。
+   yum モジュールを使う場合、当然ですがリモートノードに yum をインストールしておく必要があります。
+
+.. note::
+
+   Python 3 は Python 2 とは少し異なっていて、ほとんどの Python プログラム（Ansible を含む）ではまだ利用することができません。しかし、いつくかの Linux ディストリビューション（Gentoo や Arch）では Python 2.X インタプリタがデフォルトではインストールされていません。それらのシステムではインストールして、インベントリファイル (参照 :doc:`intro_inventory`) の 'ansible_python_interpreter' 変数に Python 2.X のパスを設定する必要があります。Red Hat Enterprise Linux, CentOS, Fedora, や Ubuntu のような ディストリビューションでは 2.X のインタプリタがインストールされています。これは全ての Unix システムでも同様です。もしそれら Python 2.X がインストールされているリモートシステムを自動実行させる必要があれば、 'raw' モジュールを使えばリモート作業を行う事ができます。
 
 .. _installing_the_control_machine:
 
-Installing the Control Machine
+管理マシンへのインストール
 ``````````````````````````````
 
 .. _from_source:
 
-Running From Source
+ソースからの実行
 +++++++++++++++++++
 
-Ansible is trivially easy to run from a checkout, root permissions are not required
-to use it and there is no software to actually install for Ansible itself.  No daemons
-or database setup are required.  Because of this, many users in our community use the
-development version of Ansible all of the time, so they can take advantage of new features
-when they are implemented, and also easily contribute to the project. Because there is
-nothing to install, following the development version is significantly easier than most
-open source projects.
+Ansible はチェックアウトから実行までとても簡単で、実行に root 権限は必要なく、インストールにはソフトウェアは必要ありません。
 
-To install from source.
+デーモンやデータベースのセットアップは必要ありません。そのため、コミュニティの多くのユーザは Ansible の開発バージョンをいつでも使うことが出来ますし、新機能が実装された際に利用して、プロジェクトに簡単に貢献する事ができます。インストールするためのものがないので、開発バージョンのフォローはほとんどのオープンソースプロジェクトよりとても簡単です。
+
+ソースからインストールするには次のコマンドを実行します。
 
 .. code-block:: bash
 
@@ -111,61 +88,56 @@ To install from source.
     $ cd ./ansible
     $ source ./hacking/env-setup
 
-If you don't have pip installed in your version of Python, install pip::
+使用している Python のバージョンで pip をインストールしていない場合は、次のようにして pip をインストールします。
 
     $ sudo easy_install pip
 
-Ansible also uses the following Python modules that need to be installed::
+また、Ansible は次の Python モジュールを使うため、インストールされている必要があります。
 
     $ sudo pip install paramiko PyYAML Jinja2 httplib2
 
-Note when updating ansible, be sure to not only update the source tree, but also the "submodules" in git
-which point at Ansible's own modules (not the same kind of modules, alas).
+Ansible をアップデートする際の注意として、ソースツリーのアップデートだけでなく、 git にある Ansible 自身のモジュールである "submodules" のアップデートも行ってください。
 
 .. code-block:: bash
 
     $ git pull --rebase
     $ git submodule update --init --recursive
 
-Once running the env-setup script you'll be running from checkout and the default inventory file
-will be /etc/ansible/hosts.  You can optionally specify an inventory file (see :doc:`intro_inventory`) 
-other than /etc/ansible/hosts:
+一度 env-setup スクリプトを実行すれば、/etc/ansible/hosts にデフォルトのインベントリファイルが作成されます。インベントリファイル(参照 :doc:`intro_inventory`)は /etc/ansible/hosts　以外にも記述することができます。
 
 .. code-block:: bash
 
     $ echo "127.0.0.1" > ~/ansible_hosts
     $ export ANSIBLE_HOSTS=~/ansible_hosts
 
-You can read more about the inventory file in later parts of the manual.
+インベントリファイルについてはマニュアルに後ほど登場するので、内容について確認することが出来ます。
 
-Now let's test things with a ping command:
+ping コマンドでテストをしてみましょう。
 
 .. code-block:: bash
 
     $ ansible all -m ping --ask-pass
 
-You can also use "sudo make install" if you wish.
+お望みであれば "sudo make install" を実行する事もできます。
 
 .. _from_yum:
 
-Latest Release Via Yum
+Yum による最新リリース
 ++++++++++++++++++++++
 
-RPMs are available from yum for `EPEL
-<http://fedoraproject.org/wiki/EPEL>`_ 6, 7, and currently supported
-Fedora distributions. 
+Fedora ディストリビューションでサポートしている `EPEL
+<http://fedoraproject.org/wiki/EPEL>`_ 6, 7 から yum によるインストールも可能です。
 
-Ansible itself can manage earlier operating
-systems that contain Python 2.4 or higher (so also EL5).
+Ansible は Python 2.4 かそれ以上（EL5）のオペレーティングシステムを管理する事ができます。
 
-Fedora users can install Ansible directly, though if you are using RHEL or CentOS and have not already done so, `configure EPEL <http://fedoraproject.org/wiki/EPEL>`_
-   
+Fedora ユーザは Ansible を直接インストールする事ができます。RHEL または CentOS を使っていて EPEL の設定を行っていない場合は `EPEL の設定 <http://fedoraproject.org/wiki/EPEL>`_ を参照します。
+
 .. code-block:: bash
 
-    # install the epel-release RPM if needed on CentOS, RHEL, or Scientific Linux
+    # CentOS, RHEL または Linux 系統において epel リリースの RPM をインストール
     $ sudo yum install ansible
 
-You can also build an RPM yourself.  From the root of a checkout or tarball, use the ``make rpm`` command to build an RPM you can distribute and install. Make sure you have ``rpm-build``, ``make``, and ``python2-devel`` installed.
+また、RPM 自身でビルド可能です。チェックアウトまたは tarball から ``make rpm`` コマンドで RPM をビルドし、インストールする事ができます。``rpm-build``, ``make``, and ``python2-devel`` で、インストールされている事を確認できます。
 
 .. code-block:: bash
 
@@ -176,12 +148,12 @@ You can also build an RPM yourself.  From the root of a checkout or tarball, use
 
 .. _from_apt:
 
-Latest Releases Via Apt (Ubuntu)
+Apt (Ubuntu)による最新リリース
 ++++++++++++++++++++++++++++++++
 
-Ubuntu builds are available `in a PPA here <https://launchpad.net/~ansible/+archive/ansible>`_.
+Ubuntu によるビルドは `PPA <https://launchpad.net/~ansible/+archive/ansible>`_ から可能です。
 
-To configure the PPA on your machine and install ansible run these commands:
+PPA の configure と Ansible のインストールには次のコマンドを実行します。
 
 .. code-block:: bash
 
@@ -190,26 +162,26 @@ To configure the PPA on your machine and install ansible run these commands:
     $ sudo apt-get update
     $ sudo apt-get install ansible
 
-.. note:: On older Ubuntu distributions, "software-properties-common" is called "python-software-properties".
+.. note:: 古い Ubuntu ディストリビューションでは "software-properties-common" は "python-software-properties" から呼ばれます。
 
-Debian/Ubuntu packages can also be built from the source checkout, run:
+Debian/Ubuntu パッケージは次のようにしてソースをチェックアウトしてビルドできます。
 
 .. code-block:: bash
 
     $ make deb
 
-You may also wish to run from source to get the latest, which is covered above.
+最新のソースを入手して実行する場合、上記の方法で可能です。
 
 .. _from_pkg:
 
-Latest Releases Via pkg (FreeBSD)
+pkg (FreeBSD)による最新リリース
 +++++++++++++++++++++++++++++++++
 
 .. code-block:: bash
 
     $ sudo pkg install ansible
 
-You may also wish to install from ports, run:
+次の様に実行して ports からもインストールが可能です。
 
 .. code-block:: bash
 
@@ -217,10 +189,10 @@ You may also wish to install from ports, run:
 
 .. _from_brew:
 
-Latest Releases Via Homebrew (Mac OSX)
+Homebrew (Mac OSX)による最新リリース
 ++++++++++++++++++++++++++++++++++++++
 
-To install on a Mac, make sure you have Homebrew, then run:
+Mac へのインストールには、Homebrew で次の様に実行します。
 
 .. code-block:: bash
 
@@ -229,41 +201,39 @@ To install on a Mac, make sure you have Homebrew, then run:
 
 .. _from_pip:
 
-Latest Releases Via Pip
+Pip による最新リリース
 +++++++++++++++++++++++
 
-Ansible can be installed via "pip", the Python package manager.  If 'pip' isn't already available in
-your version of Python, you can get pip by::
+Ansible は Python パッケージマネージャの "pip" でインストールが可能です。'pip' をインストールしていない場合、次のようにして pip をインストールする事が出来ます。
 
    $ sudo easy_install pip
 
-Then install Ansible with::
+Ansible をインストールします。
 
    $ sudo pip install ansible
 
-If you are installing on OS X Mavericks, you may encounter some noise from your compiler.  A workaround is to do the following::
+OS X Mavericks をインストールしている場合、いくつか警告が出るかもしれません。回避策として次のように実行します。
 
    $ sudo CFLAGS=-Qunused-arguments CPPFLAGS=-Qunused-arguments pip install ansible
 
-Readers that use virtualenv can also install Ansible under virtualenv, though we'd recommend to not worry about it and just install Ansible globally.  Do not use easy_install to install ansible directly.
+virtualenv 環境で Ansible をインストールする事もできます。virtualenv 環境は Ansible をグローバル環境にインストールされないか心配する心配する必要がありません。Ansible を直接インストールするために easy_install を使わないでください。
 
 .. _tagged_releases:
 
-Tarballs of Tagged Releases
+タグ付けされたリリースのTarballs
 +++++++++++++++++++++++++++
 
-Packaging Ansible or wanting to build a local package yourself, but don't want to do a git checkout?  Tarballs of releases are available on the `Ansible downloads <http://releases.ansible.com/ansible>`_ page.
+Ansible をパッケージングしたりビルドしたい場合、git チェックアウトは必要ありません。`Ansible downloads <http://releases.ansible.com/ansible>`_ から Tarboalls を取得できます。
 
-These releases are also tagged in the `git repository <https://github.com/ansible/ansible/releases>`_ with the release version.
+これらのリリースは `git repository <https://github.com/ansible/ansible/releases>`_ のリリースバージョンになります。
 
 .. seealso::
 
    :doc:`intro_adhoc`
-       Examples of basic commands
+       基本的なコマンドの例
    :doc:`playbooks`
-       Learning ansible's configuration management language
+       Ansible の設定管理言語を学ぶ
    `Mailing List <http://groups.google.com/group/ansible-project>`_
-       Questions? Help? Ideas?  Stop by the list on Google Groups
+       質問? Help? アイデア?  Google Groups メーリングリスト
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
+       #ansible IRC チャットチャンネル
