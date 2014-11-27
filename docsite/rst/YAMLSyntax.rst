@@ -1,8 +1,8 @@
-YAML Syntax
+YAML シンタックス
 ===========
 
 This page provides a basic overview of correct YAML syntax, which is how Ansible
-playbooks (our configuration management language) are expressed.  
+playbooks (our configuration management language) are expressed.
 
 We use YAML because it is easier for humans to read and write than other common
 data formats like XML or JSON.  Further, there are libraries available in most
@@ -12,10 +12,10 @@ You may also wish to read :doc:`playbooks` at the same time to see how this
 is used in practice.
 
 
-YAML Basics
+YAML の基本
 -----------
 
-For Ansible, nearly every YAML file starts with a list.   
+For Ansible, nearly every YAML file starts with a list.
 Each item in the list is a list of key/value pairs, commonly
 called a "hash" or a "dictionary".  So, we need to know how
 to write lists and dictionaries in YAML.
@@ -50,7 +50,7 @@ Dictionaries can also be represented in an abbreviated form if you really want t
 
 .. _truthiness:
 
-Ansible doesn't really use these too much, but you can also specify a 
+Ansible doesn't really use these too much, but you can also specify a
 boolean value (true/false) in several forms::
 
     ---
@@ -113,4 +113,3 @@ with a "{", YAML will think it is a dictionary, so you must quote it, like so::
        Questions? Help? Ideas?  Stop by the list on Google Groups
    `irc.freenode.net <http://irc.freenode.net>`_
        #ansible IRC chat channel
-
