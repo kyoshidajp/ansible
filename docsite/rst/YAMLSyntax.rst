@@ -1,31 +1,20 @@
 YAML シンタックス
 ===========
 
-This page provides a basic overview of correct YAML syntax, which is how Ansible
-playbooks (our configuration management language) are expressed.
+このページでは Ansible playbooks (構成管理言語)を記述する YAML シンタックスについて解説します。
 
-We use YAML because it is easier for humans to read and write than other common
-data formats like XML or JSON.  Further, there are libraries available in most
-programming languages for working with YAML.
+Ansible では XML や JSON などに比べて、人が読み書きがしやすい YAML をデータフォーマットに採用しました。ほとんどのプログラミング言語では YAML のライブラリが存在します。
 
-You may also wish to read :doc:`playbooks` at the same time to see how this
-is used in practice.
-
+また、実際の記述方法については :doc:`playbooks` が参考になるでしょう。
 
 YAML の基本
 -----------
 
-For Ansible, nearly every YAML file starts with a list.
-Each item in the list is a list of key/value pairs, commonly
-called a "hash" or a "dictionary".  So, we need to know how
-to write lists and dictionaries in YAML.
+Ansible において、YAML ファイルはリストで開始します。リストの各要素は "ハッシュ" または "ディクショナリ" と呼ばれるキーと値のリストです。そのため、最初に YAML におけるリストとディクショナリの記述方法について知る必要があります。
 
-There's another small quirk to YAML.  All YAML files (regardless of their association with
-Ansible or not) should begin with ``---``.  This is part of the YAML
-format and indicates the start of a document.
+YAML には若干癖があります。(Ansible に関連するしないにかからわず）すべての YAML ファイルは ``---`` で始めなければなりません。これは YAML フォーマットの書式であり、ドキュメントの開始となります。
 
-All members of a list are lines beginning at the same indentation level starting
-with a ``-`` (dash) character::
+リストのすべての要素は ``-`` (ハイフン)で始まり、同じインデントレベルになります。
 
     ---
     # A list of tasty fruits
@@ -34,7 +23,7 @@ with a ``-`` (dash) character::
     - Strawberry
     - Mango
 
-A dictionary is represented in a simple ``key:`` and ``value`` form::
+ディクショナリは次のフォーマットで ``key:`` と ``value`` を表します。
 
     ---
     # An employee record
@@ -42,7 +31,7 @@ A dictionary is represented in a simple ``key:`` and ``value`` form::
     job: Developer
     skill: Elite
 
-Dictionaries can also be represented in an abbreviated form if you really want to::
+ディクショナリは次の様に省略して記述することも可能です。
 
     ---
     # An employee record
@@ -50,8 +39,7 @@ Dictionaries can also be represented in an abbreviated form if you really want t
 
 .. _truthiness:
 
-Ansible doesn't really use these too much, but you can also specify a
-boolean value (true/false) in several forms::
+boolean 値(true/false)を記述する事もできます。
 
     ---
     create_key: yes
@@ -60,8 +48,7 @@ boolean value (true/false) in several forms::
     likes_emacs: TRUE
     uses_cvs: false
 
-Let's combine what we learned so far in an arbitrary YAML example.  This really
-has nothing to do with Ansible, but will give you a feel for the format::
+これまで学んだ YAML の例を組み合わせてみましょう。次の記述では Ansible は何も実行しないのですが、フォーマットについて学ぶ事ができるでしょう。
 
     ---
     # An employee record
@@ -79,24 +66,22 @@ has nothing to do with Ansible, but will give you a feel for the format::
         python: Elite
         dotnet: Lame
 
-That's all you really need to know about YAML to start writing
-`Ansible` playbooks.
+実際に YAML について学ぶのに必要なのは `Ansible` playbooks を書く事です。
 
 Gotchas
 -------
 
-While YAML is generally friendly, the following is going to result in a YAML syntax error:
+YAML は全体的にフレンドリーである一方で、次の記述ではシンタックスエラーになります。
 
     foo: somebody said I should put a colon here: so I did
 
-You will want to quote any hash values using colons, like so:
+この場合、次のようにコロンを値で囲みます。
 
     foo: "somebody said I should put a colon here: so I did"
 
-And then the colon will be preserved.
+こうする事でコロンは保持されます。
 
-Further, Ansible uses "{{ var }}" for variables.  If a value after a colon starts
-with a "{", YAML will think it is a dictionary, so you must quote it, like so::
+Ansible は変数を "{{ var }}" で記述します。コロンの後に "{" で開始すれば、YAML はディレクトリであると判断するので、次のように囲む必要があります。
 
     foo: "{{ variable }}"
 
@@ -104,12 +89,12 @@ with a "{", YAML will think it is a dictionary, so you must quote it, like so::
 .. seealso::
 
    :doc:`playbooks`
-       Learn what playbooks can do and how to write/run them.
+       playbooks では何を実行できて、どうやって記述、実行するかを学びます。
    `YAMLLint <http://yamllint.com/>`_
-       YAML Lint (online) helps you debug YAML syntax if you are having problems
+       問題があった際に YAML シンタックスをデバッグする助けになる YAML Lint(オンライン)
    `Github examples directory <https://github.com/ansible/ansible/tree/devel/examples/playbooks>`_
-       Complete playbook files from the github project source
+       github プロジェクトのコンプリート playbook ファイル
    `Mailing List <http://groups.google.com/group/ansible-project>`_
-       Questions? Help? Ideas?  Stop by the list on Google Groups
+       質問? Help? アイデア?  Google Groups メーリングリスト
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
+       #ansible IRC チャットチャンネル
