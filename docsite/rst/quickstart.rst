@@ -1,9 +1,8 @@
-Quickstart Video
+クイックスタート ビデオ
 ````````````````
 
-We've recorded a short video that shows how to get started with Ansible that you may like to use alongside the documentation.
+ドキュメントと一緒に、どうやって Ansible を始めるかについて紹介した短いビデオを公開しています。
 
-The `quickstart video <http://ansible.com/ansible-resources>`_ is about 30 minutes long and will show you some of the basics about your
-first steps with Ansible.
+`クイックスタート ビデオ <http://ansible.com/ansible-resources>`_ は30分間で Ansible の最初のステップに関する基礎をいくつか紹介しています。
 
-Enjoy, and be sure to visit the rest of the documentation to learn more.
+楽しんでください。そしてドキュメントの残りを読めば、もっと学ぶことが出来る事でしょう。
