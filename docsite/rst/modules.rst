@@ -1,4 +1,4 @@
-About Modules
+モジュール
 =============
 
 .. toctree::
@@ -6,57 +6,50 @@ About Modules
 
 .. _modules_intro:
 
-Introduction
+イントロダクション
 ````````````
 
-Ansible ships with a number of modules (called the 'module library')
-that can be executed directly on remote hosts or through :doc:`Playbooks <playbooks>`.
+Ansible には直接、または :doc:`Playbooks <playbooks>` を経由してリモートホストで実行される事のできる('モジュールライブラリ'と呼ばれる)複数のモジュールが存在します。
 
-Users can also write their own modules.   These modules can control system resources, like services, packages, or files (anything really), or
-handle executing system commands.
+ユーザがモジュールを作成する事も可能です。これらの services や packages や file() handle モジュールではシステムリソースの管理やシステムコマンドの実行ができます。
 
-Let's review how we execute three different modules from the command line::
+コマンドラインから3つの異なるモジュールを実行する方法を見てみましょう。
 
     ansible webservers -m service -a "name=httpd state=started"
     ansible webservers -m ping
     ansible webservers -m command -a "/sbin/reboot -t now"
 
-Each module supports taking arguments.  Nearly all modules take ``key=value``
-arguments, space delimited.  Some modules take no arguments, and the command/shell modules simply 
-take the string of the command you want to run.
+各モジュールでは引数をサポートしています。ほぼすべてのモジュールではスペースで区切られた ``key=value`` 引数をとります。いくつかのモジュールでは引数をとらず、 command/shell モジュールではシンプルに、実行したいコマンドの文字列をとります。
 
-From playbooks, Ansible modules are executed in a very similar way::
+playbooks からの場合、Ansible モジュールはとても似た方法で実行されます。
 
     - name: reboot the servers
       action: command /sbin/reboot -t now
 
-Which can be abbreviated to::
+次のように省略することもできます。
 
     - name: reboot the servers
       command: /sbin/reboot -t now
 
-All modules technically return JSON format data, though if you are using the command line or playbooks, you don't really need to know much about
-that.  If you're writing your own module, you care, and this means you do not have to write modules in any particular language -- you get to choose.
+すべてのモジュールは JSON フォーマットのデータを返しますが、コマンドラインからの実行でも playbooks からの実行であっても、それについてきちんと知っておく必要はありません。モジュールを自作する場合、これに注意すればモジュールを特定の言語で記述する必要はありません -- 言語は選ぶ事ができます。
 
-Modules are `idempotent`, meaning they will seek to avoid changes to the system unless a change needs to be made.  When using Ansible
-playbooks, these modules can trigger 'change events' in the form of notifying 'handlers' to run additional tasks.
+モジュールには `冪等性`、つまり変更する必要がなければ変更しない、という性質があります。Ansible playbooks を使う際に、追加のタスクを実行するために 'ハンドラ' に通知する形式で '変更イベント' がトリガーできます。
 
-Documentation for each module can be accessed from the command line with the ansible-doc tool::
+各モジュールのドキュメントはコマンドラインから ansible-doc の実行で確認する事ができます。
 
     ansible-doc yum
 
 .. seealso::
 
    :doc:`intro_adhoc`
-       Examples of using modules in /usr/bin/ansible
+   /usr/bin/ansible でモジュールを使用する例
    :doc:`playbooks`
-       Examples of using modules with /usr/bin/ansible-playbook
+   /usr/bin/ansible-playbook でモジュールを使用する例
    :doc:`developing_modules`
-       How to write your own modules
+       モジュールを自作する方法
    :doc:`developing_api`
-       Examples of using modules with the Python API
+       Python API でモジュールを使用する例
    `Mailing List <http://groups.google.com/group/ansible-project>`_
-       Questions? Help? Ideas?  Stop by the list on Google Groups
+       質問? Help? アイデア?  Google Groups メーリングリスト
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
+       #ansible IRC チャットチャンネル
