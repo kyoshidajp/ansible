@@ -1,145 +1,130 @@
-Getting Started
+はじめに
 ===============
 
 .. contents:: Topics
 
 .. _gs_about:
 
-Foreword
+まえがき
 ````````
 
-Now that you've read :doc:`intro_installation` and installed Ansible, it's time to dig in and get
-started with some commands.  
+すでに :doc:`intro_installation` を読んで Ansible がインストールされているので、詳細について掘り下げて、いくつかのコマンドを実行してみましょう。
 
-What we are showing first are not the powerful configuration/deployment/orchestration of Ansible, called playbooks.
-Playbooks are covered in a separate section.
+まず最初に playbooks と呼ばれる設定・デプロイ・オーケストレーションについて簡単に紹介します。Playbooks は区切られたセクションでカバーされています。
 
-This section is about how to get going initially.  Once you have these concepts down, read :doc:`intro_adhoc` for some more
-detail, and then you'll be ready to dive into playbooks and explore the most interesting parts!
+このセクションでは最初にどうやって実行するかを学びます。その後、より詳細について :doc:`intro_adhoc`  を読めば playbooks の内部に飛び込む準備が出来、もっとも面白い部分を探検する事が出来るでしょう！
 
 .. _remote_connection_information:
 
-Remote Connection Information
+リモート接続の情報
 `````````````````````````````
 
-Before we get started, it's important to understand how Ansible is communicating with remote
-machines over SSH. 
+はじめに、Ansible がどのようにしてリモートマシンと SSH で通信するのかを理解することが重要です。
 
-By default, Ansible 1.3 and later will try to use native 
-OpenSSH for remote communication  when possible.  This enables both ControlPersist (a performance feature), Kerberos, and options in ~/.ssh/config such as Jump Host setup.  When using Enterprise Linux 6 operating systems as the control machine (Red Hat Enterprise Linux and derivatives such as CentOS), however, the version of OpenSSH may be too old to support ControlPersist. On these operating systems, Ansible will fallback into using a high-quality Python implementation of
-OpenSSH called 'paramiko'.  If you wish to use features like Kerberized SSH and more, consider using Fedora, OS X, or Ubuntu as your control machine until a newer version of OpenSSH is available for your platform -- or engage 'accelerated mode' in Ansible.  See :doc:`playbooks_acceleration`.
+Ansible 1.3 以降ではデフォルトで、リモートマシンと通信するのにネイティブ OpenSSH を使います。これは ControlPersist（パフォーマンス機能）、Kerberos や Junp Host セットアップのような ~/.ssh/config でのオプションを有効にします。管理マシンとして Enterprise Linux 6 (Red Hat Enterprise Linux と CentOSなどその派生)を使用する際、OpenSSH は ControlPersist をサポートしておらず、古すぎるかもしれません。これらのオペレーティングシステムでは、Ansible は 'paramiko' と呼ばれる OpenSSH の高品質な Python 実装を使用してフォールバックします。もし Kerberos 認証 SSH のような機能を使用したい場合、管理マシンとなるプラットフォームにおいて OpenSSH の新しいバージョンが有効になるまで Fedora、OS X、Ubuntu を使用することを検討してください。 :doc:`playbooks_acceleration` を参照してください。
 
-In Ansible 1.2 and before, the default was strictly paramiko and native SSH had to be explicitly selected with -c ssh or set in the configuration file.
+Ansible 1.2 以前では、厳密には paramiko がデフォルトなので、ネイティブ SSH を使用するには -c ssh を指定するか、設定ファイルに指定する必要があります。
 
-Occasionally you'll encounter a device that doesn't do SFTP. This is rare, but if talking with some remote devices that don't support SFTP, you can switch to SCP mode in :doc:`intro_configuration`.
+たまに、SFTP を実行できないデバイスがあります。これはまれですが、SFTP をサポートしないリモートデバイスと通信する際に、SCP モード :doc:`intro_configuration` に変更する事もできます。
 
-When speaking with remote machines, Ansible will by default assume you are using SSH keys -- which we encourage -- but passwords are fine too.  To enable password auth, supply the option ``--ask-pass`` where needed.  If using sudo features and when sudo requires a password, also supply ``--ask-sudo-pass`` as appropriate.
+リモートマシンと通信を行う際に、Ansible はデフォルトでは SSH キー -- これを推奨します -- の使用を想定していますが、パスワードでも可能です。パスワード認証を有効にするには ``--ask-pass`` オプションを指定します。パスワードが必要な sudo を有効にするには ``--ask-sudo-pass`` オプションを指定します。
 
-While it may be common sense, it is worth sharing: Any management system benefits from being run near the machines being managed. If running in a cloud, consider running Ansible from a machine inside that cloud.  It will work better than on the open
-internet in most cases.
+常識かもしれませんが、: Any management system benefits from being run near the machines being managed を共有することに価値があります。
+クラウドで実行する場合、クラウド内のマシンから Ansible を実行する事を考えます。オープンなインターネットではよくあるケースで、快適に動作するでしょう。
 
-As an advanced topic, Ansible doesn't just have to connect remotely over SSH.  The transports are pluggable, and there are options for managing things locally, as well as managing chroot, lxc, and jail containers.  A mode called 'ansible-pull' can also invert the system and have systems 'phone home' via scheduled git checkouts to pull configuration directives from a central repository.
+進んだトピックとして、Ansible は SSH 経由でリモートに接続する必要はありません。
+転送はプラガブルで、chroot や lxc 、jail コンテナと同様のローカル管理のためのオプションがあります。これは 'ansible-pull' と呼ばれるモードで、can also invert the system and have systems 'phone home' via scheduled git checkouts to pull configuration directives from a central repository.
 
 .. _your_first_commands:
 
-Your first commands
+最初のコマンド
 ```````````````````
 
-Now that you've installed Ansible, it's time to get started with some basics.
+Ansible がインストールされたので、いくつか基礎を始めます。
 
-Edit (or create) /etc/ansible/hosts and put one or more remote systems in it, for
-which you have your SSH key in ``authorized_keys``::
+/etc/ansible/hosts を編集（または作成）し、そこに ``authorized_keys`` に存在する SSH キーのひとつ以上のリモートホストを追加します。
 
     192.168.1.50
     aserver.example.org
     bserver.example.org
 
-This is an inventory file, which is also explained in greater depth here:  :doc:`intro_inventory`.
+これはインベントリファイルと呼ばれます。詳細は :doc:`intro_inventory` にあります。
 
-We'll assume you are using SSH keys for authentication.  To set up SSH agent to avoid retyping passwords, you can
-do:
+認証のために SSH キーを使用しているとします。次のようにしてパスワード入力なしで接続できるようにします。
 
 .. code-block:: bash
 
     $ ssh-agent bash
     $ ssh-add ~/.ssh/id_rsa
 
-(Depending on your setup, you may wish to use Ansible's ``--private-key`` option to specify a pem file instead)
+(設定によっては、代わりに pem ファイルを記述するために の ``--private-key`` オプションを使用する事もできます)
 
-Now ping all your nodes:
+次はすべてのノードに対して ping を実行します。
 
 .. code-block:: bash
 
    $ ansible all -m ping
 
-Ansible will attempt to remote connect to the machines using your current
-user name, just like SSH would.  To override the remote user name, just use the '-u' parameter.
+Ansible は SSH の様に、現在のユーザ名でマシンに対してリモート接続を試みます。リモートでのユーザ名を指定するには '-u' パラメータを指定します。
 
-If you would like to access sudo mode, there are also flags to do that:
+sudo でアクセスしたい場合は次の様にオプションを指定します。
 
 .. code-block:: bash
 
-    # as bruce
+    # ユーザ bruce で実行
     $ ansible all -m ping -u bruce
-    # as bruce, sudoing to root
-    $ ansible all -m ping -u bruce --sudo 
-    # as bruce, sudoing to batman
+    # ユーザ bruce で、 sudo によって root として実行
+    $ ansible all -m ping -u bruce --sudo
+    # ユーザ bruce で、 sudo によって batman として実行
     $ ansible all -m ping -u bruce --sudo --sudo-user batman
 
-(The sudo implementation is changeable in Ansible's configuration file if you happen to want to use a sudo
-replacement.  Flags passed to sudo (like -H) can also be set there.)
+(sudo を指定する実行は Ansible の設定ファイルによる設定が変更されます。このフラグは (-H の様な) sudo の設定を無効にします。)
 
-Now run a live command on all of your nodes:
-  
+すべてのノードに生存確認を行います。
+
 .. code-block:: bash
 
    $ ansible all -a "/bin/echo hello"
 
-Congratulations.  You've just contacted your nodes with Ansible.  It's
-soon going to be time to read some of the more real-world :doc:`intro_adhoc`, and explore
-what you can do with different modules, as well as the Ansible
-:doc:`playbooks` language.  Ansible is not just about running commands, it
-also has powerful configuration management and deployment features.  There's more to
-explore, but you already have a fully working infrastructure!
+おめでとうございます。Ansible でノードと通信ができました。 :doc:`intro_adhoc` を読んで、Ansible :doc:`playbooks` だけでなく、別のモジュールでやりたいことを見つける事ができます。Ansible はコマンドを実行させるだけでなく、設定やデプロイの管理を行う機能もあります。あなたはもうインフラを完全に動作させる事ができます。
 
 .. _a_note_about_host_key_checking:
 
-Host Key Checking
+ホストキーの確認
 `````````````````
 
-Ansible 1.2.1 and later have host key checking enabled by default.  
+Ansible 1.2.1 以降ではデフォルトでホストキーの確認が有効になっています。
 
-If a host is reinstalled and has a different key in 'known_hosts', this will result in an error message until corrected.  If a host is not initially in 'known_hosts' this will result in prompting for confirmation of the key, which results in an interactive experience if using Ansible, from say, cron.  You might not want this.
+ホストが再インストールされ、'known_hosts' のキーが異なってしまうと、正しくなるまで結果はエラーになります。ホストが 'known_hosts' に登録されていない状態では、キー入力の確認プロンプトが表示されます。この動作は望ましいものではないかもしれません。
 
-If you wish to disable this behavior and understand the implications, you can do so by editing /etc/ansible/ansible.cfg or ~/.ansible.cfg::
+もし、その影響を理解した上でこの動作を無効にするには、/etc/ansible/ansible.cfg または ~/.ansible.cfg を次のように編集します。
 
     [defaults]
     host_key_checking = False
 
-Alternatively this can be set by an environment variable:
+あるいは環境変数に設定する事でも可能です。
 
 .. code-block:: bash
 
     $ export ANSIBLE_HOST_KEY_CHECKING=False
 
-Also note that host key checking in paramiko mode is reasonably slow, therefore switching to 'ssh' is also recommended when using this feature.
+paramiko モードによるホストキーの確認はおおむね速度が遅いので注意してください。そのため、代わりに 'ssh' を使用する事をおすすめします。
 
 .. _a_note_about_logging:
 
-Ansible will log some information about module arguments on the remote system in the remote syslog, unless a task or play is marked with a "no_log: True" attribute, explained later.
+Ansible は "no_log: True" が指定された場合を除き、リモートマシンのリモート syslog にログを残します。これは後ほど説明します。
 
-To enable basic logging on the control machine see :doc:`intro_configuration` document and set the 'log_path' configuration file setting.  Enterprise users may also be interested in :doc:`tower`.  Tower provides a very robust database logging feature where it is possible to drill down and see history based on hosts, projects, and particular inventories over time -- explorable both graphically and through a REST API.
+管理マシンで基本的なロギングを有効にするには :doc:`intro_configuration` を参照し、設定ファイルの 'log_path' を変更します。エンタープライズユーザは :doc:`tower` に興味を持たれるかもしれません。Tower には REST API を経由してドリルダウン、ホストやプロジェクトの履歴閲覧を可能にする非常に強力なデータベースのロギング機能があります。
 
 .. seealso::
 
    :doc:`intro_inventory`
-       More information about inventory
+       インベントリに関するより詳細な情報
    :doc:`intro_adhoc`
-       Examples of basic commands
+       基本的なコマンドの例
    :doc:`playbooks`
-       Learning Ansible's configuration management language
+       Ansible の構成管理言語を学びます
    `Mailing List <http://groups.google.com/group/ansible-project>`_
-       Questions? Help? Ideas?  Stop by the list on Google Groups
+       質問? Help? アイデア?  Google Groups メーリングリスト
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
+       #ansible IRC チャットチャンネル
