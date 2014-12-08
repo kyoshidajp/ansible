@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# coding: utf-8
 # (c) 2012, Jan-Piet Mens <jpmens () gmail.com>
 # (c) 2012-2014, Michael DeHaan <michael@ansible.com> and others
 #
@@ -352,7 +353,7 @@ def process_category(category, categories, options, env, template, outputname):
 
     modules.sort()
 
-    category_header = "%s Modules" % (category.title())
+    category_header = "%s モジュール" % (category.title())
     underscores = "`" * len(category_header)
 
     category_file.write("""\
@@ -424,7 +425,7 @@ def main():
 
     category_list_path = os.path.join(options.output_dir, "modules_by_category.rst")
     category_list_file = open(category_list_path, "w")
-    category_list_file.write("Module Index\n")
+    category_list_file.write("モジュール インデックス\n")
     category_list_file.write("============\n")
     category_list_file.write("\n\n")
     category_list_file.write(".. toctree::\n")
