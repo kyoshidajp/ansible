@@ -119,31 +119,31 @@ Aliases: @{ ','.join(aliases) }@
 これはコアモジュールです
 ---------------------
 
-This source of this module is hosted on GitHub in the `ansible-modules-core <http://github.com/ansible/ansible-modules-core>`_ repo.
+このモジュールのソースコードは `ansible-modules-core <http://github.com/ansible/ansible-modules-core>` の GitHub リポジトリにてホスティングされています。
 
-If you believe you have found a bug in this module, and are already running the latest stable or development version of Ansible, first look in the `issue tracker at github.com/ansible/ansible-modules-core <http://github.com/ansible/ansible-modules-core>`_ to see if a bug has already been filed.  If not, we would be grateful if you would file one.
+このモジュールで最新の安定版または開発版のバグを見つけた場合は、まず最初に `issue tracker at github.com/ansible/ansible-modules-core <http://github.com/ansible/ansible-modules-core>`_ に登録されていないか確認してください。もしまだない場合、登録してもらえれば感謝します。
 
-Should you have a question rather than a bug report, inquries are welcome on the `ansible-project google group <https://groups.google.com/forum/#!forum/ansible-project>`_ or on Ansible's "#ansible" channel, located on irc.freenode.net.   Development oriented topics should instead use the similar `ansible-devel google group <https://groups.google.com/forum/#!forum/ansible-project>`_.
+バグレポートに疑問があり、`ansible-project google group <https://groups.google.com/forum/#!forum/ansible-project>` または irc.freenode.net の Ansible's "#ansible" チャンネルでの問い合わせは歓迎します。開発中心のトピックスであれば `ansible-devel google group <https://groups.google.com/forum/#!forum/ansible-project>`_ になります。
 
-Documentation updates for this module can also be edited directly by submitting a pull request to the module source code, just look for the "DOCUMENTATION" block in the source tree.
+このモジュールのドキュメントはソースコードの pull request が送られる事で直接編集され更新されます。ソースツリーの "DOCUMENTATION" ブロックを確認して下さい。
 
-This is a "core" ansible module, which means it will receive slightly higher priority for all requests than those in the "extras" repos.
+これは "extras" リポジトリのものより少し優先して対応される "core" モジュールです。
 
     {% else %}
 
 これはエキストラモジュールです
 ------------------------
 
-This source of this module is hosted on GitHub in the `ansible-modules-extras <http://github.com/ansible/ansible-modules-extras>`_ repo.
+このモジュールのソースコードは `ansible-modules-extras <http://github.com/ansible/ansible-modules-extras>`_ の GitHub リポジトリにてホスティングされています。
 
-If you believe you have found a bug in this module, and are already running the latest stable or development version of Ansible, first look in the `issue tracker at github.com/ansible/ansible-modules-extras <http://github.com/ansible/ansible-modules-extras>`_ to see if a bug has already been filed.  If not, we would be grateful if you would file one.
+このモジュールで最新の安定版または開発版のバグを見つけた場合は、まず最初に `issue tracker at github.com/ansible/ansible-modules-extras <http://github.com/ansible/ansible-modules-extras>`_ に登録されていないか確認してください。もしまだない場合、登録してもらえれば感謝します。
 
-Should you have a question rather than a bug report, inquries are welcome on the `ansible-project google group <https://groups.google.com/forum/#!forum/ansible-project>` or on Ansible's "#ansible" channel, located on irc.freenode.net.   Development oriented topics should instead use the similar `ansible-devel google group <https://groups.google.com/forum/#!forum/ansible-project>`_.
+バグレポートに疑問があり、`ansible-project google group <https://groups.google.com/forum/#!forum/ansible-project>` または irc.freenode.net の Ansible's "#ansible" チャンネルでの問い合わせは歓迎します。開発中心のトピックスであれば `ansible-devel google group <https://groups.google.com/forum/#!forum/ansible-project>`_ になります。
 
-Documentation updates for this module can also be edited directly by submitting a pull request to the module source code, just look for the "DOCUMENTATION" block in the source tree.
+このモジュールのドキュメントはソースコードの pull request が送られる事で直接編集され更新されます。ソースツリーの "DOCUMENTATION" ブロックを確認して下さい。
 
-Note that this module is designated a "extras" module.  Non-core modules are still fully usable, but may receive slightly lower response rates for issues and pull requests.
-Popular "extras" modules may be promoted to core modules over time.
+このモジュールは "extras" モジュールとして設計された事に注意してください。非コアモジュールはまだ完全に使用できるわけではありませんが、わずかな issue や pull request のレスポンスがあるでしょう。
+人気の高い "extras" モジュールは時間が経てばコアモジュールに昇格するでしょう。
 
     {% endif %}
 {% endif %}
