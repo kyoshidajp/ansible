@@ -4634,3 +4634,8 @@ span[id*='MathJax-Span'] {
 #search-box-id {
     padding-right: 25px;
 }
+
+#page-content td {
+    min-width: 6em;
+    padding-left: 0.4em;
+}
