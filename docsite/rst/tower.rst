@@ -1,10 +1,8 @@
 Ansible Tower
 `````````````
 
-`Ansible Tower <http://ansible.com/tower>`_ (formerly 'AWX') is a web-based solution that makes Ansible even more easy to use for IT teams of all kinds.  It's designed to be the hub for all of your automation tasks.
+`Ansible Tower <http://ansible.com/tower>`_ (以前の名称は 'AWX') はすべての IT チームが Ansible を簡単に利用できるようになる、ウェブベースのツールです。すべての自動タスクのハブとなるように設計されています。
 
-Tower allows you to control access to who can access what, even allowing sharing of SSH credentials without someone being able to transfer those credentials.  Inventory can be graphically managed or synced with a wide variety of cloud sources.  It logs all of your jobs, integrates well with LDAP, and has an amazing browsable REST API.  Command line tools are available for easy integration with Jenkins as well.  Provisioning callbacks provide great support for autoscaling topologies.
+Tower では SSH の認証情報を転送する事なく、SSH credentials の共有許可についてユーザのアクセス権をコントロールすることを許可します。Inventory はグラフィカルな管理とクラウドソースの豊富な変化で同期されます。LDAP は統合され、おどろくべき REST APIですべてのジョブがロギングされます。コマンドラインツールは Jenkins のような簡単な統合で利用できます。プロビジョニングコールバックではトポロジーの自動スケールのためのすばらしいサポートが提供されています。
 
-Find out more about Tower features and how to download it on the `Ansible Tower webpage <http://ansible.com/tower>`_.  Tower
-is free for usage for up to 10 nodes, and comes bundled with amazing support from Ansible, Inc.  As you would expect, Tower is
-installed using Ansible playbooks!
+Tower の機能やダウンロード方法について詳しくは `Ansible Tower ウェブページ <http://ansible.com/tower>`_ を参照してください。Tower は10ノードの利用までは無料で、Ansible, Inc によるすばらしいサポートが付いています。予想通り、Tower は Ansible palybooks を使ってインストールされます。
