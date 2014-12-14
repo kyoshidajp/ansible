@@ -1,103 +1,96 @@
-Patterns
+パターン
 ++++++++
 
 .. contents:: Topics
 
-Patterns in Ansible are how we decide which hosts to manage.  This can mean what hosts to communicate with, but in terms
-of :doc:`playbooks` it actually means what hosts to apply a particular configuration or IT process to.
+Ansible におけるパターンは管理対象のホストを決める方法になります。これはどのホストと通信するか、という事ですが :doc:`playbooks` の観点においては、特定の構成または IT プロセスを適用するホストを意味します。
 
-We'll go over how to use the command line in :doc:`intro_adhoc` section, however, basically it looks like this::
+コマンドラインでどのように使うかは :doc:`intro_adhoc` セクションで出てきますが、基本的なものは次のようになります。::
 
     ansible <pattern_goes_here> -m <module_name> -a <arguments>
 
-Such as::
+例えば次のようになります。::
 
     ansible webservers -m service -a "name=httpd state=restarted"
 
-A pattern usually refers to a set of groups (which are sets of hosts) -- in the above case, machines in the "webservers" group.
+パターンは通常グループのセット (ホストのセット) -- 上のケースでは "webservers" グループのマシンを参照します。
 
-Anyway, to use Ansible, you'll first need to know how to tell Ansible which hosts in your inventory to talk to.
-This is done by designating particular host names or groups of hosts.
+Ansible を使用するために最初に必要なのは、Ansible にどのように inventory のホストを伝えるかを知る事です。これは特定のホスト名またはホストのグループを指定する事で行われます。
 
-The following patterns are equivalent and target all hosts in the inventory::
+次のパターンは inventory のすべてのホストが対象となります。::
 
     all
     *
 
-It is also possible to address a specific host or set of hosts by name::
+また、特定のホスト名やホストのセットで指定する事も可能です。::
 
     one.example.com
     one.example.com:two.example.com
     192.168.1.50
     192.168.1.*
 
-The following patterns address one or more groups.  Groups separated by a colon indicate an "OR" configuration.
-This means the host may be in either one group or the other::
+次のパターンは一つ以上のグループが対象となります。グループはコロンで区切られ、"OR" になります。
+これはホストが一つのグループまたはそれ以外になります。::
 
     webservers
     webservers:dbservers
 
-You can exclude groups as well, for instance, all machines must be in the group webservers but not in the group phoenix::
+グループを除く指定、例えば、すべてのマシンは webservers グループになりますが、 phoenix グループは該当しないという事も可能です。::
 
     webservers:!phoenix
 
-You can also specify the intersection of two groups.  This would mean the hosts must be in the group webservers and
-the host must also be in the group staging::
+また、２つのグループに共通する指定も可能です。これはグループ webservers で、さらに stagging に属するホストが対象になります。::
 
     webservers:&staging
 
-You can do combinations::
+組み合わせることも出来ます。::
 
     webservers:dbservers:&staging:!phoenix
 
-The above configuration means "all machines in the groups 'webservers' and 'dbservers' are to be managed if they are in
-the group 'staging' also, but the machines are not to be managed if they are in the group 'phoenix' ... whew!
+上の設定ではグループ 'webservers' と 'dbservers' のうち、グループ 'staging' に該当するが、グループ 'phoenix' には該当しないマシンが対象になります ... ふう。
 
-You can also use variables if you want to pass some group specifiers via the "-e" argument to ansible-playbook, but this
-is uncommonly used::
+ansible-playbook で "-e" 引数を使って変数を使用することもできますが、特別な使用です。::
 
     webservers:!{{excluded}}:&{{required}}
 
-You also don't have to manage by strictly defined groups.  Individual host names, IPs and groups, can also be referenced using
-wildcards::
+グループを厳密に指定する必要はありません。ホスト名、IP、グループはワイルドカードを使って指定可能です。::
 
     *.example.com
     *.com
 
-It's also ok to mix wildcard patterns and groups at the same time::
+ワイルドカードパターンとグループを同時に指定する事も可能です。::
 
     one*.com:dbservers
 
-As an advanced usage, you can also select the numbered server in a group::
-   
+一歩進んで、グループの番号がつけられたサーバを選択可能です。::
+
     webservers[0]
 
-Or a portion of servers in a group::
+グループの一部分の選択はこのようになります。::
 
     webservers[0:25]
 
-Most people don't specify patterns as regular expressions, but you can.  Just start the pattern with a '~'::
+ほとんどの人は指定しませんが、正規表現によるパターンの指定も可能です。パターンを '~' で開始します。::
 
     ~(web|db).*\.example\.com
 
-While we're jumping a bit ahead, additionally, you can add an exclusion criteria just by supplying the ``--limit`` flag to /usr/bin/ansible or /usr/bin/ansible-playbook::
+/usr/bin/ansible または /usr/bin/ansible-playbook に ``--limit`` フラグを指定して除外条件を指定する事も可能です。::
 
     ansible-playbook site.yml --limit datacenter2
 
-And if you want to read the list of hosts from a file, prefix the file name with '@'.  Since Ansible 1.2::
+ファイルからホストのリストを読む場合、ファイルの先頭に '@' を指定します。Ansible 1.2 から追加されました。::
 
     ansible-playbook site.yml --limit @retry_hosts.txt
 
-Easy enough.  See :doc:`intro_adhoc` and then :doc:`playbooks` for how to apply this knowledge.
+十分簡単です。:doc:`intro_adhoc` と、ここの内容を実施するための :doc:`playbooks` を参照してください。
 
 .. seealso::
 
    :doc:`intro_adhoc`
-       Examples of basic commands
+       基本的なコマンドの例
    :doc:`playbooks`
-       Learning ansible's configuration management language
+       ansible の構成管理言語を学ぶ
    `Mailing List <http://groups.google.com/group/ansible-project>`_
-       Questions? Help? Ideas?  Stop by the list on Google Groups
+       質問? Help? アイデア? Google Groups メーリングリスト
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
+       #ansible IRC チャットチャンネル
