@@ -1,34 +1,31 @@
-Start and Step
+開始とステップ
 ======================
 
-This shows a few alternative ways to run playbooks. These modes are very useful for testing new plays or debugging.
+playbook を実行する他の方法を紹介します。これらのモードは新しい play をテストしたりデバッグするのに便利です。
 
 
 .. _start_at_task
 
-Start-at-task
-`````````````
-If you want to start executing your playbook at a particular task, you can do so with the ``--start-at`` option::
+特定のタスクからの開始
+```````````````````
+playbook の特定のタスクから実行したい場合は ``--start-at`` オプションで可能です。::
 
     ansible-playbook playbook.yml --start-at="install packages"
 
-The above will start executing your playbook at a task named "install packages".
-
+上記の場合、"install packages" と名付けられたタスクから実行されます。
 
 .. _step
 
-Step
-````
+ステップ
+````````
 
-Playbooks can also be executed interactively with ``--step``::
+playbook は ``--step`` を指定することでインタラクティブな実行が可能です。::
 
     ansible-playbook playbook.yml --step
 
-This will cause ansible to stop on each task, and ask if it should execute that task.
-Say you had a task called "configure ssh", the playbook run will stop and ask::
+各タスクでいったん停止し、そのタスクを実行するか確認します。
+例えば "configure ssh" と呼ばれるタスクがあると、playbook は実行し確認します::
 
     Perform task: configure ssh (y/n/c):
 
-Answering "y" will execute the task, answering "n" will skip the task, and answering "c"
-will continue executing all the remaining tasks without asking.
-
+"y" はタスクを実行し、"n" はタスクをスキップ、"c" は残りのすべてのタスクを確認せずに実行します。
