@@ -24,7 +24,7 @@
 
     ansible-playbook example.yml --tags "configuration,packages"
 
-その一方で、特定の task を *除いて: playbook を実行したい場合、次のようする事で可能です。::
+その一方で、特定の task を *除いて* playbook を実行したい場合、次のようする事で可能です。::
 
     ansible-playbook example.yml --skip-tags "notification"
 
