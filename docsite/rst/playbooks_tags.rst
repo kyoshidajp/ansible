@@ -1,12 +1,11 @@
-Tags
+タグ
 ====
 
-If you have a large playbook it may become useful to be able to run a 
-specific part of the configuration without running the whole playbook.  
+巨大な playbook があり、playbook 全体を実行せずに特定の部分だけ実行したくなる事があるかもしれません。
 
-Both plays and tasks support a "tags:" attribute for this reason.
+このため play と tasks は "tags:" 属性をサポートしています。
 
-Example::
+例::
 
     tasks:
 
@@ -21,20 +20,20 @@ Example::
           tags:
              - configuration
 
-If you wanted to just run the "configuration" and "packages" part of a very long playbook, you could do this::
+とても長い playbook の中の "configuration" と "packages" 部分だけを実行したい場合、このようにする事で可能です。::
 
     ansible-playbook example.yml --tags "configuration,packages"
-    
-On the other hand, if you want to run a playbook *without* certain tasks, you could do this::
+
+その一方で、特定の task を *除いて: playbook を実行したい場合、次のようする事で可能です。::
 
     ansible-playbook example.yml --skip-tags "notification"
 
-You may also apply tags to roles::
+また、roles にタグを適用することも可能です。::
 
     roles:
       - { role: webserver, port: 5000, tags: [ 'web', 'foo' ] }
 
-And you may also tag basic include statements::
+加えて include 文でも tag をつける事が出来ます。::
 
     - include: foo.yml tags=web,foo
 
@@ -43,14 +42,10 @@ Both of these have the function of tagging every single task inside the include 
 .. seealso::
 
    :doc:`playbooks`
-       An introduction to playbooks
+       playbooks の紹介
    :doc:`playbooks_roles`
-       Playbook organization by roles
+       Playbook を roles で編成する
    `User Mailing List <http://groups.google.com/group/ansible-devel>`_
-       Have a question?  Stop by the google group!
+       質問がありますか？google group で確認しましょう！
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
-
-
-
+       #ansible IRC チャットチャネル
