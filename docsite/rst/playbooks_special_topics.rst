@@ -1,8 +1,7 @@
-Playbooks: Special Topics
-`````````````````````````
-Here are some playbook features that not everyone may need to learn, but can be quite useful for particular applications. 
-Browsing these topics is recommended as you may find some useful tips here, but feel free to learn the basics of Ansible first 
-and adopt these only if they seem relevant or useful to your environment.
+Playbooks: スペシャルトピックス
+`````````````````````````````
+ここにある playbook の機能はすべての人が学ぶ必要はないかもしれませんが、特定のアプリケーションにとってはとても役立つはずです。
+これらのトピックにざっと目を通す事は役立つ tips を見つけるかもしれないのでおすすめですが、Ansible の最初の基礎として学んだり、あなたの環境にとって適切であるか、役立つかどうかによって採用するしないは自由です。
 
 .. toctree::
    :maxdepth: 1
