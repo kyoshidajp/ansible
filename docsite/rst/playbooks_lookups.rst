@@ -1,25 +1,23 @@
-Using Lookups
-=============
+ルックアップを使う
+================
 
-Lookup plugins allow access of data in Ansible from outside sources.  These plugins are evaluated on the Ansible control
-machine, and can include reading the filesystem but also contacting external datastores and services.  
-These values are then made available using the standard templating system
-in Ansible, and are typically used to load variables or templates with information from those systems.
+ルックアッププラグインは外部のソースから Ansible でデータのアクセスを可能にします。これらのプラグインは Ansible が操作しているマシンでの実行になり、ファイルシステムの読み取りだけでなく、外部のデータストアやサービスを含みます。
+これらの値は Ansible の標準テンプレートシステムを使うことで有効になり、典型的な利用はこれらのシステムからの情報を変数またはテンプレートでの読み取りになります。
 
-.. note:: This is considered an advanced feature, and many users will probably not rely on these features.  
+.. note:: これは高度な機能である事を考慮すると、多くのユーザはおそらくこれらの機能に依存することはないでしょう。
 
-.. note:: Lookups occur on the local computer, not on the remote computer.
+.. note:: ルックアップはローカルコンピュータで実行され、リモートコンピュータではありません。
 
-.. contents:: Topics
+.. contents:: トピックス
 
 .. _getting_file_contents:
 
-Intro to Lookups: Getting File Contents
+ルックアップのイントロ: ファイルの内容を取得する
 ```````````````````````````````````````
 
-The file lookup is the most basic lookup type.
+ファイルルックアップはもっとも基礎的なルックアップの種類です。
 
-Contents can be read off the filesystem as follows::
+contents は以下のようにファイルシステムのデータを読み取ります。::
 
     - hosts: all
       vars:
@@ -27,131 +25,121 @@ Contents can be read off the filesystem as follows::
 
       tasks:
 
-         - debug: msg="the value of foo.txt is {{ contents }}"
+         - debug: msg="foo.txt の値は {{ contents }}"
 
 .. _password_lookup:
 
-The Password Lookup
+passowrd ルックアップ
 ```````````````````
 
 .. note::
 
     A great alternative to the password lookup plugin, if you don't need to generate random passwords on a per-host basis, would be to use :doc:`playbooks_vault`.  Read the documentation there and consider using it first, it will be more desirable for most applications.
 
-``password`` generates a random plaintext password and stores it in
-a file at a given filepath.  
+``password`` はランダムなプレーンテキストのパスワードを生成し、指定されたファイルパスのファイルに保存します。
 
-(Docs about crypted save modes are pending)
- 
-If the file exists previously, it will retrieve its contents, behaving just like with_file. Usage of variables like "{{ inventory_hostname }}" in the filepath can be used to set
-up random passwords per host (what simplifies password management in 'host_vars' variables).
 
-Generated passwords contain a random mix of upper and lowercase ASCII letters, the
-numbers 0-9 and punctuation (". , : - _"). The default length of a generated password is 20 characters.
-This length can be changed by passing an extra parameter::
+(crypted save に関するドキュメントは保留中です)
+
+すでにファイルが存在すれば、内容を戻し、with_file のように動作します。ファイルパスで "{{ inventory_hostname }}" の様な変数の使用はホスト（'host_vars' 変数でもっともシンプルなパスワード管理）ごとのランダムなパスワードがセットアップするのに使用されます。
+
+ランダムにミックスされた大文字または小文字の ASCII 文字列、数字の 0-9、句読点 (". , : - _") を含むパスワードを生成します。生成するパスワード文字列のデフォルトは 20 です。
+この長さは追加パラメータによって変更することが出来ます。::
 
     ---
     - hosts: all
 
       tasks:
 
-        # create a mysql user with a random password:
+        # ランダムなパスワードで mysql ユーザを作成:
         - mysql_user: name={{ client }}
                       password="{{ lookup('password', 'credentials/' + client + '/' + tier + '/' + role + '/mysqlpassword length=15') }}"
                       priv={{ client }}_{{ tier }}_{{ role }}.*:ALL
 
         (...)
 
-.. note:: If the file already exists, no data will be written to it. If the file has contents, those contents will be read in as the password. Empty files cause the password to return as an empty string        
+.. note:: ファイルがすでに存在すれば、それにデータは書き込まれません。ファイルに内容があった場合、パスワードとして読まれます。空のファイルであればパスワードは空文字列となります。
 
-Starting in version 1.4, password accepts a "chars" parameter to allow defining a custom character set in the generated passwords. It accepts comma separated list of names that are either string module attributes (ascii_letters,digits, etc) or are used literally::
+バージョン 1.4 より、password は生成するパスワードにカスタム文字列を定義する "chars" パラメータを指定できます。カンマで区切られたリストで文字列モジュール属性（ascii_letters,digits, etc）またはリテラルが使用されます。::
 
     ---
     - hosts: all
 
       tasks:
 
-        # create a mysql user with a random password using only ascii letters:
+        # ascii 文字のみのランダムなパスワードで mysql ユーザを作成:
         - mysql_user: name={{ client }}
                       password="{{ lookup('password', '/tmp/passwordfile chars=ascii_letters') }}"
                       priv={{ client }}_{{ tier }}_{{ role }}.*:ALL
 
-        # create a mysql user with a random password using only digits:
+        # 数値のみのランダムなパスワードで mysql ユーザを作成:
         - mysql_user: name={{ client }}
                       password="{{ lookup('password', '/tmp/passwordfile chars=digits') }}"
                       priv={{ client }}_{{ tier }}_{{ role }}.*:ALL
 
-        # create a mysql user with a random password using many different char sets:
+        # 異なる文字のランダムなパスワードで mysql ユーザを作成:
         - mysql_user: name={{ client }}
                       password="{{ lookup('password', '/tmp/passwordfile chars=ascii_letters,digits,hexdigits,punctuation') }}"
                       priv={{ client }}_{{ tier }}_{{ role }}.*:ALL
 
         (...)
 
-To enter comma use two commas ',,' somewhere - preferably at the end. Quotes and double quotes are not supported.
+カンマを入力するには２つのカンマ ',,' を使い -　なるべく最後にします。クォートとダブルクォートはサポートしていません。
 
 .. _more_lookups:
 
-More Lookups
-````````````
+他のルックアップ
+````````````````
 
-.. note:: This feature is very infrequently used in Ansible.  You may wish to skip this section.
+.. note:: この機能が使用されるのはとてもまれです。このセクションはスキップしてもよいかもしれません。
 
 .. versionadded:: 0.8
 
-Various *lookup plugins* allow additional ways to iterate over data.  In :doc:`Loops <playbooks_loops>` you will learn
-how to use them to walk over collections of numerous types.  However, they can also be used to pull in data
-from remote sources, such as shell commands or even key value stores. This section will cover lookup
-plugins in this capacity.
+変数 *lookup plugins* はデータを繰り返す追加の方法です。:doc:`Loops <playbooks_loops>` には多数の型のコレクションを使う方法があります。しかし、シェルコマンドやキーバリューストアのようなリモートソースからデータを取得するのに使用する事ができます。このセクションではルックアッププラグインを可能な限り紹介します。
 
-Here are some examples::
+いくつかの例です::
 
     ---
     - hosts: all
 
       tasks:
 
-         - debug: msg="{{ lookup('env','HOME') }} is an environment variable"
+         - debug: msg="{{ lookup('env','HOME') }} は環境変数"
 
          - debug: msg="{{ item }} is a line from the result of this command"
            with_lines:
              - cat /etc/motd
 
-         - debug: msg="{{ lookup('pipe','date') }} is the raw result of running this command"
+         - debug: msg="{{ lookup('pipe','date') }} はこのコマンドの生の結果"
 
-         - debug: msg="{{ lookup('redis_kv', 'redis://localhost:6379,somekey') }} is value in Redis for somekey"
+         - debug: msg="{{ lookup('redis_kv', 'redis://localhost:6379,somekey') }} Redis での somekey の値"
 
-         - debug: msg="{{ lookup('dnstxt', 'example.com') }} is a DNS TXT record for example.com"
+         - debug: msg="{{ lookup('dnstxt', 'example.com') }} は example.com の DNS TXT レコード"
 
-         - debug: msg="{{ lookup('template', './some_template.j2') }} is a value from evaluation of this template"
+         - debug: msg="{{ lookup('template', './some_template.j2') }} はこのテンプレートを評価した値"
 
-         - debug: msg="{{ lookup('etcd', 'foo') }} is a value from a locally running etcd"
+         - debug: msg="{{ lookup('etcd', 'foo') }} はローカルで etcd を実行した値"
 
-As an alternative you can also assign lookup plugins to variables or use them
-elsewhere.  This macros are evaluated each time they are used in a task (or
-template)::
+選択方法として、変数のルックアッププラグインを割り当てるか、または別の使用が可能です。このマクロはタスク（またはテンプレート）で実行するたびに評価されます::
 
     vars:
       motd_value: "{{ lookup('file', '/etc/motd') }}"
 
     tasks:
 
-      - debug: msg="motd value is {{ motd_value }}"
+      - debug: msg="motd の値は {{ motd_value }}"
 
 .. seealso::
 
    :doc:`playbooks`
-       An introduction to playbooks
+       playbook の紹介
    :doc:`playbooks_conditionals`
-       Conditional statements in playbooks
+       playbook での条件文
    :doc:`playbooks_variables`
-       All about variables
+       変数に関する全て
    :doc:`playbooks_loops`
-       Looping in playbooks
+       playbook でのループ
    `User Mailing List <http://groups.google.com/group/ansible-devel>`_
-       Have a question?  Stop by the google group!
+       質問がありますか？google group で確認しましょう！
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
-
-
+       #ansible IRC チャットチャネル
