@@ -1,13 +1,11 @@
-Setting the Environment (and Working With Proxies)
+環境設定（とプロキシ経由で動作させる）
 ==================================================
 
 .. versionadded:: 1.1
 
-It is quite possible that you may need to get package updates through a proxy, or even get some package
-updates through a proxy and access other packages not through a proxy.  Or maybe a script you might wish to 
-call may also need certain environment variables set to run properly.
+プロキシ経由でパッケージのアップデートを取得したり、通常のパッケージアップデートではプロキシ経由で取得して、他のパッケージではプロキシを経由しないでアップデートを取得したいという必要があるかもしれませんが、これも可能です。または、正確に実行するために環境変数を確実にする必要のあるスクリプトかもしれません。
 
-Ansible makes it easy for you to configure your environment by using the 'environment' keyword.  Here is an example::
+Ansible では 'environment' キーワードを使用することにより環境設定を簡単に行えます。これは例です。::
 
     - hosts: all
       remote_user: root
@@ -18,12 +16,12 @@ Ansible makes it easy for you to configure your environment by using the 'enviro
           environment:
             http_proxy: http://proxy.example.com:8080
 
-The environment can also be stored in a variable, and accessed like so::
+環境は変数に設定することも可能で、このようにアクセスします。::
 
     - hosts: all
       remote_user: root
 
-      # here we make a variable named "proxy_env" that is a dictionary
+      # ディクショナリで "proxy_env" と名づけた変数を作成
       vars:
         proxy_env:
           http_proxy: http://proxy.example.com:8080
@@ -33,8 +31,7 @@ The environment can also be stored in a variable, and accessed like so::
         - apt: name=cobbler state=installed
           environment: proxy_env
 
-While just proxy settings were shown above, any number of settings can be supplied.  The most logical place
-to define an environment hash might be a group_vars file, like so::
+プロキシ設定を上で紹介したとはいえ、多数の設定が提供されています。環境ハッシュを定義するのに論理上もっともな場所は group_vars ファイルかもしれず、次のようになります。::
 
     ---
     # file: group_vars/boston
@@ -48,10 +45,8 @@ to define an environment hash might be a group_vars file, like so::
 .. seealso::
 
    :doc:`playbooks`
-       An introduction to playbooks
+       playbook の紹介
    `User Mailing List <http://groups.google.com/group/ansible-devel>`_
-       Have a question?  Stop by the google group!
+       質問がありますか？google group で確認しましょう！
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
-
+       #ansible IRC チャットチャンネル
