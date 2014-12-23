@@ -1,47 +1,40 @@
-Accelerated Mode
-================
+アクセラレートモード
+==================
 
 .. versionadded:: 1.3
 
-You Might Not Need This!
+この機能は不要かも！
 ````````````````````````
 
-Are you running Ansible 1.5 or later?  If so, you may not need accelerated mode due to a new feature called "SSH pipelining" and should read the :ref:`pipelining` section of the documentation.
+Ansible 1.5 以降を実行していますか？実行していれば、"SSH パイプライン" と呼ばれる新しい機能があり、アクセラレートモードは不要かもしれません。ドキュメントの :ref:`pipelining` セクションを読むべきです。
 
-For users on 1.5 and later, accelerated mode only makes sense if you (A) are managing from an Enterprise Linux 6 or earlier host
-   and still are on paramiko, or (B) can't enable TTYs with sudo as described in the pipelining docs.
+1.5 以降のユーザにとって、アクセラレートモードは (A) paramiko が使われている Enterprise Linux 6 以前のホストを管理するか、(B) パイプラインドキュメントに記述されているような sudo で TTY を有効に出来ない場合にのみ意味があります。
 
-If you can use pipelining, Ansible will reduce the amount of files transferred over the wire, 
-making everything much more efficient, and performance will be on par with accelerated mode in nearly all cases, possibly excluding very large file transfer.   Because less moving parts are involved, pipelining is better than accelerated mode for nearly all use cases.
+もしパイプラインを使用できれば、Ansible はファイル転送量を減らして、効率を良くし、アクセラレートモードを使用するほとんどすべてのケースにおいてパフォーマンスを向上し、とても大きなファイル転送を遮断する事ができます。less moving parts は複雑なため、ほとんどすべてのケースにおいてはアクセラレートモードよりもパイプラインの方がよいでしょう。
 
-Accelerated moded remains around in support of EL6
-control machines and other constrained environments.
+アクセラレートモードは　EL6 の管理マシンと、その他制限付き環境のサポートを中心に残されています。
 
-Accelerated Mode Details
+アクセラレートモードの詳細
 ````````````````````````
 
-While OpenSSH using the ControlPersist feature is quite fast and scalable, there is a certain small amount of overhead involved in
-using SSH connections.  While many people will not encounter a need, if you are running on a platform that doesn't have ControlPersist support (such as an EL6 control machine), you'll probably be even more interested in tuning options.
+OpenSSH が ControlPersist 機能を使用している間はとても速くてスケーラブルで、SSH 接続の使用にともなったオーバーヘッドが少なくなります。（EL6 管理マシンのような） 多くの人は必要性な場面には出会わないかもしれませんが、例えば ControlPersist をサポートしないプラットフォームで実行している場合、おそらくチューニングオプションに興味を持つことでしょう。
 
-Accelerated mode is there to help connections work faster, but still uses SSH for initial secure key exchange.  There is no
-additional public key infrastructure to manage, and this does not require things like NTP or even DNS. 
+アクセラレートモードは接続速度を向上させるのに役立ちますが、最初のセキュア鍵交換には SSH を使用します。管理するための公開鍵インフラを追加する必要はなく、 NTP や DNS のようなものでさえ不要です。
 
-Accelerated mode can be anywhere from 2-6x faster than SSH with ControlPersist enabled, and 10x faster than paramiko.
+アクセラレートモードは ControlPersist の SSH よりも 2-6倍、paramiko よりも 10倍速いです。
 
-Accelerated mode works by launching a temporary daemon over SSH. Once the daemon is running, Ansible will connect directly
-to it via a socket connection. Ansible secures this communication by using a temporary AES key that is exchanged during
-the SSH connection (this key is different for every host, and is also regenerated periodically). 
+アクセラレートモードは SSH 上に一時的なデーモンを起動する事によって動作します。一度デーモンが動作すれば、Ansible はソケット接続を通じて直接接続します。Ansible は SSH 接続で交換される一時的な AES キー（このキーはすべてのホストで異なり、定期的に再生成される）を使用して安全な通信を行います。
 
-By default, Ansible will use port 5099 for the accelerated connection, though this is configurable. Once running, the daemon will accept connections for 30 minutes, after which time it will terminate itself and need to be restarted over SSH.
+通常、Ansible はアクセラレートモードの接続にポート 5099 を使用しますが、この値は変更可能です。一度動作すれば、デーモンは 30 分間接続を受け付け、その後は一旦接続を終了して、また SSH で再開します。
 
-Accelerated mode offers several improvements over the (deprecated) original fireball mode from which it was based:
+アクセラレートモードにはオリジナルの fireball モード（将来廃止予定）からいくつかの改善点があります。:
 
-* No bootstrapping is required, only a single line needs to be added to each play you wish to run in accelerated mode.
-* Support for sudo commands (see below for more details and caveats) is available.
-* There are fewer requirements. ZeroMQ is no longer required, nor are there any special packages beyond python-keyczar 
-* python 2.5 or higher is required.
+* ブートスラッピングは必要ではなく、アクセラレートモードでは実行したい各 play ごとに一つの行のみ追加される必要があります。
+* sudo コマンドのサポートがあります（より詳細と注意点を後述で参照）。
+* 必須条件が少なくなりました。ZeroMQ はもはや不要で、特別なパッケージの python-keyczar でさえ不要です。
+* python 2.5 以上が必要です。
 
-In order to use accelerated mode, simply add `accelerate: true` to your play::
+アクセラレートモードを使用するためには、playbook に `accelerate: true` を追加するだけです。::
 
     ---
 
@@ -50,14 +43,14 @@ In order to use accelerated mode, simply add `accelerate: true` to your play::
 
       tasks:
 
-      - name: some task
+      - name: いくつかのタスク
         command: echo {{ item }}
         with_items:
         - foo
         - bar
         - baz
 
-If you wish to change the port Ansible will use for the accelerated connection, just add the `accelerated_port` option::
+アクセラレート接続のために Ansible のポートを変更したい場合、 `accelerated_port` オプションを追加します。::
 
     ---
 
@@ -66,21 +59,18 @@ If you wish to change the port Ansible will use for the accelerated connection, 
       # default port is 5099
       accelerate_port: 10000
 
-The `accelerate_port` option can also be specified in the environment variable ACCELERATE_PORT, or in your `ansible.cfg` configuration::
+また、`accelerate_port` オプションは環境変数または `ansible.cfg` 設定の  ACCELERATE_PORT に指定可能です。::
 
     [accelerate]
     accelerate_port = 5099
 
-As noted above, accelerated mode also supports running tasks via sudo, however there are two important caveats:
+上記の注意として、アクセラレートモードは sudo 経由のタスク実行をサポートしていますが、２つ注意点があります。:
 
-* You must remove requiretty from your sudoers options.
-* Prompting for the sudo password is not yet supported, so the NOPASSWD option is required for sudo'ed commands.
+* sudoers オプションから必須指定を削除する必要があります。
+* sudo パスワードのプロンプトはまだサポートされていないため、sudo のコマンドのために NOPASSWD オプションが必要です。
 
-As of Ansible version `1.6`, you can also allow the use of multiple keys for connections from multiple Ansible management nodes. To do so, add the following option
-to your `ansible.cfg` configuration::
+Ansible バージョン 1.6 では、複数の Ansible 管理ノードから接続するための複数のキーの使用が出来ます。そのためには、次のオプションを `ansible.cfg` の設定に追加する必要があります。::
 
     accelerate_multi_key = yes
 
-When enabled, the daemon will open a UNIX socket file (by default `$ANSIBLE_REMOTE_TEMP/.ansible-accelerate/.local.socket`). New connections over SSH can
-use this socket file to upload new keys to the daemon.
-
+有効であれば、デーモンは UNIX ソケットファイル（通常、`$ANSIBLE_REMOTE_TEMP/.ansible-accelerate/.local.socket`) を開きます。SSH 上の新しい接続は新しいキーをデーモンにアップロードするためにこのソケットファイルを利用できます。
