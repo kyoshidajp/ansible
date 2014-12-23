@@ -1,16 +1,13 @@
-Prompts
-=======
+プロンプト
+=========
 
-When running a playbook, you may wish to prompt the user for certain input, and can
-do so with the 'vars_prompt' section.  
+playbook の実行時にユーザ入力のプロンプトを出したい場合は 'vars_prompt' セクションの指定により可能です。
 
-A common use for this might be for asking for sensitive data that you do not want to record.
+一般的に、記録したくないデリケートなデータを尋ねるために使用されます。
 
-This has uses beyond security, for instance, you may use the same playbook for all
-software releases and would prompt for a particular release version
-in a push-script.
+セキュリティを考慮して、例えば、すべてのソフトウェアリリースで同じ playbook を利用し、push-script の特定のリリースバージョンのプロンプトを出したいという事があるかもしれません。
 
-Here is a most basic example::
+これは最も基本的な例です::
 
     ---
     - hosts: all
@@ -20,46 +17,42 @@ Here is a most basic example::
         from: "camelot"
 
       vars_prompt:
-        name: "what is your name?"
-        quest: "what is your quest?"
-        favcolor: "what is your favorite color?"
+        name: "名前は何ですか？"
+        quest: "何を探していますか？"
+        favcolor: "好きな色は何ですか？"
 
-If you have a variable that changes infrequently, it might make sense to
-provide a default value that can be overridden.  This can be accomplished using
-the default argument::
+まれに変更する変数があり、それは上書き可能なデフォルト値を持たせたい事があるかもしれません。これは default 引数を使うことで実現できます。::
 
    vars_prompt:
 
      - name: "release_version"
-       prompt: "Product release version"
+       prompt: "製品のリリースバージョン"
        default: "1.0"
 
-An alternative form of vars_prompt allows for hiding input from the user, and may later support
-some other options, but otherwise works equivalently::
+vars_prompt にはユーザの入力を隠す設定があり、今後その他のオプションをサポートする予定ですが、それ以外は同じように動作します。::
 
    vars_prompt:
 
      - name: "some_password"
-       prompt: "Enter password"
+       prompt: "パスワードを入力"
        private: yes
 
      - name: "release_version"
-       prompt: "Product release version"
+       prompt: "製品のリリースバージョン"
        private: no
 
-If `Passlib <http://pythonhosted.org/passlib/>`_ is installed, vars_prompt can also crypt the
-entered value so you can use it, for instance, with the user module to define a password::
+`Passlib <http://pythonhosted.org/passlib/>`_ がインストールされていれば、vars_prompt は入力値を暗号化する事が可能で、例えば、パスワードを指定するユーザモジュールでの利用があります。::
 
    vars_prompt:
 
      - name: "my_password2"
-       prompt: "Enter password2"
+       prompt: "password2 を入力"
        private: yes
        encrypt: "sha512_crypt"
        confirm: yes
        salt_size: 7
 
-You can use any crypt scheme supported by 'Passlib':
+'Passlib' によってサポートされている次の crypt スキーマを使用可能です:
 
 - *des_crypt* - DES Crypt
 - *bsdi_crypt* - BSDi Crypt
@@ -79,22 +72,17 @@ You can use any crypt scheme supported by 'Passlib':
 - *scram* - SCRAM Hash
 - *bsd_nthash* - FreeBSD’s MCF-compatible nthash encoding
 
-However, the only parameters accepted are 'salt' or 'salt_size'. You can use your own salt using
-'salt', or have one generated automatically using 'salt_size'. If nothing is specified, a salt
-of size 8 will be generated.
+ただ、'salt' または 'salt_size' パラメータのみ指定可能です。自分のソルト値を 'salt' で指定するか、'salt_size' で自動的に生成されたものを使うことが出来ます。何も指定しなければ、サイズ 8 の salt が生成されます。
 
 .. seealso::
 
    :doc:`playbooks`
-       An introduction to playbooks
+       playbook の紹介
    :doc:`playbooks_conditionals`
-       Conditional statements in playbooks
+       playbook での条件文
    :doc:`playbooks_variables`
-       All about variables
+       変数に関するすべて
    `User Mailing List <http://groups.google.com/group/ansible-devel>`_
-       Have a question?  Stop by the google group!
+       質問がありますか？google グループで確認する！
    `irc.freenode.net <http://irc.freenode.net>`_
-       #ansible IRC chat channel
-
-
-
+       #ansible IRC チャットチャネル
